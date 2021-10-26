@@ -15,8 +15,8 @@ const options = program.opts();
 program
   .command('add <taskName>')
   .description('add a task')
-  .action((...args) => {
-    api.add(args[0]).then(() => {
+  .action(() => {
+    api.add(program.args.slice(1).join(' ')).then(() => {
       console.log('添加成功')
     })
   });

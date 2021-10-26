@@ -60,10 +60,12 @@ async function askForCreateTask(list) {
         type: 'input',
         name: 'title',
         message: '请输入标题!',
-      }).then(input => {
+      }).then(async (input) => {
         if (input.title) {
           list.push({ title: input.title, done: false })
-          db.write(list)
+          await db.write(list)
+          const data = await db.read()
+          await printTasks(data)
         }
       })
 }
@@ -93,7 +95,12 @@ async function askForAction(list, index) {
     ).then(async (ans) => {
       const action = actions[ans.action]
       action && await action(list, index)
-
+      console.log('2')
+      if (ans.action === 'quit') {
+        return
+      }
+      const data = await db.read()
+      await printTasks(data)
     })
 }
 function markAsUndo(list, index) {
